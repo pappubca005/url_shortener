@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-9a%82*#*op7et2#%zfw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG ='True'
 
-ALLOWED_HOSTS = ['bitly.works', 'localhost', '127.0.0.1', '157.173.219.67']
+ALLOWED_HOSTS = ['bitly.works', 'localhost', '127.0.0.1', '157.173.219.67','194.113.64.134']
 
 # Application definition
 INSTALLED_APPS = [

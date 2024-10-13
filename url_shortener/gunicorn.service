@@ -4,7 +4,7 @@ Requires=gunicorn.socket
 After=network.target
 
 [Service]
-User=www-data
+User=root
 Group=www-data
 WorkingDirectory=/home/url_shortener
 ExecStart=/home/url_shortener/.env/bin/gunicorn \

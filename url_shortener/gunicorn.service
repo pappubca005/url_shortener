@@ -1,0 +1,17 @@
+[Unit]
+Description=gunicorn daemon for Django project
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/home/url_shortener
+ExecStart=/home/url_shortener/.env/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          url_shortener.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

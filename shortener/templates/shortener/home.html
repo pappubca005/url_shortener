@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'styles.css' %}"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}" /> -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <title>Your URL Shortener</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-weight: bold;
+        }
+        .form-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .form-control {
+            width: 80%;
+            max-width: 400px;
+            padding: 15px;
+            font-size: 16px;
+            height: 50px;
+        }
+        .btn {
+            height: 50px;
+            margin-left: 10px;
+            padding: 0 20px;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        #shortenedUrl {
+            margin-top: 20px;
+            display: none;
+        }
+        #loadingMessage {
+            display: none; /* Initially hidden */
+            margin-top: 20px;
+            font-size: 1.2em; /* Adjust font size for visibility */
+            color: #007bff; /* Color to match primary button */
+        }
+        .action-buttons {
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+        .copy-confirmation {
+            margin-left: 10px; /* Space between the button and message */
+            color: green; /* Color for confirmation message */
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5 text-center">
+        <h1 class="display-4 mb-4">Shorten Your URLs Instantly</h1>
+
+        <form id="urlForm" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="url" name="original_url" class="form-control" placeholder="Enter your long URL..." required>
+                <button type="submit" class="btn btn-primary">Shorten URL</button>
+            </div>
+        </form>
+
+        <div id="loadingMessage">Generating...</div> <!-- Loading message -->
+        <div id="shortenedUrl" class="alert alert-success" aria-live="polite" style="display: none;"></div>
+        
+        <div class="action-buttons" id="actionButtons">
+            <button id="copyButton" class="btn btn-secondary">Copy URL</button>
+            <span id="copyConfirmation" class="copy-confirmation">Copied!</span> <!-- Confirmation message -->
+            <button id="shortenAnotherButton" class="btn btn-info">Shorten Another URL</button>
+        </div>
+
+        <div class="mt-5">
+            <h2>Why Use Our URL Shortener?</h2>
+            <p>Transform long, complex web addresses into short, easy-to-share links. Perfect for social media, emails, and more!</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('urlForm').onsubmit = function(event) {
+            event.preventDefault();
+            const url = event.target.original_url.value;
+            const shortenedUrlDiv = document.getElementById('shortenedUrl');
+            const loadingMessage = document.getElementById('loadingMessage'); // Loading message element
+            const actionButtons = document.getElementById('actionButtons'); // Action buttons element
+
+            shortenedUrlDiv.style.display = 'none'; // Hide previous messages
+            shortenedUrlDiv.classList.remove('alert-success', 'alert-danger'); // Reset classes
+            loadingMessage.style.display = 'block'; // Show loading message
+            actionButtons.style.display = 'none'; // Hide action buttons initially
+
+            // Simulating a delay to show the loading message
+            setTimeout(() => {
+                fetch('/apis/shorten/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({ original_url: url })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loadingMessage.style.display = 'none'; // Hide loading message
+                    if (data.short_url) {
+                        shortenedUrlDiv.innerHTML = `Shortened URL: <a href="${data.short_url}" target="_blank">${data.short_url}</a>`;
+                        shortenedUrlDiv.classList.add('alert-success');
+                        shortenedUrlDiv.style.display = 'block'; // Show the message
+                        
+                        // Show action buttons
+                        actionButtons.style.display = 'block';
+                    } else {
+                        shortenedUrlDiv.textContent = `Error: ${data.error || 'Something went wrong.'}`;
+                        shortenedUrlDiv.classList.add('alert-danger');
+                        shortenedUrlDiv.style.display = 'block'; // Show the error
+                    }
+                })
+                .catch(error => {
+                    loadingMessage.style.display = 'none'; // Hide loading message
+                    console.error('Error:', error);
+                    shortenedUrlDiv.textContent = 'An error occurred. Please try again.';
+                    shortenedUrlDiv.classList.add('alert-danger');
+                    shortenedUrlDiv.style.display = 'block'; // Show the error
+                });
+            }, 1000); // Delay before making the fetch call (adjust as needed)
+        }
+
+        // Function to copy the shortened URL to clipboard
+        document.getElementById('copyButton').onclick = function() {
+            const shortenedUrlDiv = document.getElementById('shortenedUrl');
+            const urlToCopy = shortenedUrlDiv.querySelector('a').href; // Get the href attribute of the link
+            navigator.clipboard.writeText(urlToCopy).then(() => {
+                const copyConfirmation = document.getElementById('copyConfirmation');
+                copyConfirmation.style.display = 'inline'; // Show confirmation message
+                copyConfirmation.textContent = 'Copied!'; // Update message
+
+                // Hide the confirmation message after 2 seconds
+                setTimeout(() => {
+                    copyConfirmation.style.display = 'none';
+                }, 2000);
+            }, () => {
+                alert('Failed to copy the URL.');
+            });
+        };
+
+        // Function to reset the form and hide action buttons
+        document.getElementById('shortenAnotherButton').onclick = function() {
+            document.getElementById('urlForm').reset(); // Reset the form
+            document.getElementById('shortenedUrl').style.display = 'none'; // Hide shortened URL message
+            document.getElementById('actionButtons').style.display = 'none'; // Hide action buttons
+            document.getElementById('copyConfirmation').style.display = 'none'; // Hide copy confirmation message
+        };
+    </script>
+</body>
+</html>

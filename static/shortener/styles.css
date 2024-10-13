@@ -1,0 +1,88 @@
+body {
+    background-color: #f8f9fa; /* Light gray background */
+    font-family: 'Roboto', sans-serif; /* Ensure consistent font */
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background-color: #ffffff; /* White container */
+    border-radius: 10px; /* Rounded corners */
+    padding: 30px; /* Spacing */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+h1 {
+    font-size: 2.5rem; /* Large font size */
+    font-weight: bold; /* Bold text */
+    margin-bottom: 20px; /* Spacing below the heading */
+}
+
+.form-control {
+    height: 50px; /* Consistent height for input */
+    font-size: 1rem; /* Font size for input */
+}
+
+.btn {
+    height: 50px; /* Consistent height for buttons */
+    font-size: 1rem; /* Font size for buttons */
+    margin-top: 10px; /* Spacing above the button */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Default primary button color */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.alert {
+    margin-top: 20px; /* Spacing above alerts */
+    font-size: 1rem; /* Font size for alerts */
+}
+
+.form-group {
+    display: flex;
+    justify-content: center; /* Center align the input and button */
+    margin-bottom: 1rem; /* Space below the input */
+}
+
+.form-control {
+    width: 70%; /* Set width to 70% of the parent */
+    max-width: 400px; /* Set a max width */
+    padding: 15px; /* Adjust padding for better appearance */
+    font-size: 16px; /* Adjust font size */
+    height: 50px; /* Set input height */
+    margin-right: 0; /* Remove margin to eliminate gap */
+}
+
+.btn {
+    height: 50px; /* Set button height to match input */
+    margin-left: 0; /* Remove margin between input and button */
+    padding: 0 20px; /* Add horizontal padding */
+}
+
+.form-group {
+    display: flex;
+    justify-content: center; /* Center align the input and button */
+    align-items: flex-start; /* Align items to the start */
+    margin-bottom: 1rem; /* Space below the input */
+}
+
+.form-control {
+    width: 70%; /* Set width to 70% of the parent */
+    max-width: 400px; /* Set a max width */
+    padding: 10px; /* Adjust padding for better appearance */
+    font-size: 16px; /* Adjust font size */
+    height: 50px; /* Set input height */
+    margin-right: 0; /* Remove margin to eliminate gap */
+}
+
+.btn {
+    height: 50px; /* Set button height to match input */
+    margin-left: 0; /* Remove margin between input and button */
+    margin-top: -5px; /* Move button up */
+    padding: 0 20px; /* Add horizontal padding */
+}

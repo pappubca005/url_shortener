@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-center">URL Analytics Dashboard</h1>
+
+{% if urls %}
+<table class="table table-bordered mt-4">
+    <thead>
+        <tr>
+            <th>Original URL</th>
+            <th>Shortened URL</th>
+            <th>Clicks</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for url in urls %}
+        <tr>
+            <td>{{ url.original_url }}</td>
+            <td>
+                <a href="{{ request.build_absolute_uri(url.short_code) }}" target="_blank">
+                    {{ request.build_absolute_uri(url.short_code) }}
+                </a>
+            </td>
+            <td>{{ url.click_count }}</td> <!-- Ensure this matches your model field -->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info text-center">No URLs have been shortened yet.</div>
+{% endif %}
+{% endblock %}
